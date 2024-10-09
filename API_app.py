@@ -9,6 +9,16 @@ model = joblib.load('model.joblib')
 # Create FastAPI instance
 app = FastAPI()
 
+# Define the root endpoint
+@app.get("/")
+def read_root():
+    return {"message": "Welcome to the ML Prediction API!"}
+
+# Define a favicon endpoint
+@app.get("/favicon.ico")
+def favicon():
+    return {"message": "No favicon available."}
+
 # Define the input data structure
 class PredictionRequest(BaseModel):
     feature1: float
@@ -19,8 +29,7 @@ class PredictionRequest(BaseModel):
 # Define the prediction endpoint
 @app.post('/predict')
 def predict(request: PredictionRequest):
-    # Prepare the input data for the model
-    input_data = np.array([[request.feature1, request.feature2, request.feature3]])  # Adjust based on features
+    input_data = np.array([[request.feature1, request.feature2, request.feature3]])
     prediction = model.predict(input_data)
     return {'prediction': prediction[0]}
 
